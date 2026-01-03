@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tirage TMJ</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #1b1b2f, #0f0f1a);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+    }
+
+    .navbar h2 { margin: 0; font-size: 1.1rem; }
+
+    .nav-actions button {
+      margin-left: 10px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .reset { background: #e63946; color: #fff; }
+    .table-btn { background: #ffcc70; color: #222; }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 15px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 25px;
+      width: 360px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    input, button.main {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button.main {
+      background: linear-gradient(135deg, #ffcc70, #ff9f1c);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result { margin-top: 15px; font-size: 1.1rem; }
+
+    .jerusalem { color: #e63946; }
+    .capher { color: #2a9d8f; }
+    .bethel { color: #4ea8de; }
+    .nazareth { color: #fcbf49; }
+    .galilee { color: #8d99ae; }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h2>✝️ Tirage TMJ</h2>
+  <div class="nav-actions">
+    <button class="table-btn" onclick="accesTableau()">📋 Tableau</button>
+    <button class="reset" onclick="accesReset()">🔄 Réinitialiser</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h1>Témoins de Jésus </h1>
+    <p>Trouve ta famille 🤍 </p>
+
+    <input type="text" id="nameInput" placeholder="Nom de l'élève" />
+    <button class="main" onclick="tirageMaison()">Décider la famille</button>
+
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+  const MAX = 7; // ⬅️ maintenant 7 personnes
+  const PASSWORD = "tmj2025"; // 🔐 mot de passe
+
+  let maisons = JSON.parse(localStorage.getItem("famillesTMJ")) || [
+    { nom: "Famille JÉRUSALEM 🕊️", classe: "jerusalem", membres: [] },
+    { nom: "Famille CAPHERNAÜM 📖", classe: "capher", membres: [] },
+    { nom: "Famille JUDA 🙏", classe: "bethel", membres: [] },
+    { nom: "Famille NAZARETH 🤍", classe: "nazareth", membres: [] },
+    { nom: "Famille GALILÉE 👑", classe: "galilee", membres: [] }
+  ];
+
+  function tirageMaison() {
+    const nom = nameInput.value.trim();
+    if (!nom) return;
+
+    const disponibles = maisons.filter(m => m.membres.length < MAX);
+    if (disponibles.length === 0) {
+      result.innerHTML = "❌ Toutes les familles sont complètes.";
+      return;
+    }
+
+    result.innerHTML = "⏳ Petite réflexion...";
+
+    setTimeout(() => {
+      const famille = disponibles[Math.floor(Math.random() * disponibles.length)];
+      famille.membres.push(nom);
+
+      result.innerHTML = `🙏 <strong>${nom}</strong>, tu es de la <div class="${famille.classe}">${famille.nom} (${famille.membres.length}/${MAX})</div>`;
+
+      sauvegarder();
+      nameInput.value = "";
+    }, 1200);
+  }
+
+  function sauvegarder() {
+    localStorage.setItem("famillesTMJ", JSON.stringify(maisons));
+  }
+
+  function accesReset() {
+    const pass = prompt("Mot de passe requis :");
+    if (pass !== PASSWORD) {
+      alert("❌ Mot de passe incorrect");
+      return;
+    }
+    if (!confirm("Réinitialiser tout le tirage ?")) return;
+    maisons.forEach(m => m.membres = []);
+    sauvegarder();
+    result.innerHTML = "🔄 Tirage réinitialisé.";
+  }
+
+  function accesTableau() {
+    const pass = prompt("Mot de passe requis :");
+    if (pass !== PASSWORD) {
+      alert("❌ Mot de passe incorrect");
+      return;
+    }
+    window.location.href = "table.html";
+  }
+</script>
+</body>
+</html>
+
+

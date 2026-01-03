@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Tableau TMJ</title>
+<style>
+body{font-family:Segoe UI;background:#0f0f1a;color:white;padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #555;padding:8px}
+th{background:#222}
+</style>
+</head>
+<body>
+<h2>📋 Tableau des familles TMJ</h2>
+<table>
+<tr><th>Famille</th><th>Membres</th></tr>
+<tbody id="table"></tbody>
+</table>
+<script>
+const PASSWORD = 'tmj2025';
+const pass = prompt('Mot de passe requis :');
+if(pass !== PASSWORD){ alert('Accès refusé'); history.back(); }
+const maisons = JSON.parse(localStorage.getItem('famillesTMJ')) || [];
+const table = document.getElementById('table');
+maisons.forEach(m => {
+  table.innerHTML += `<tr><td>${m.nom}</td><td>${m.membres.join('<br>') || '-'}</td></tr>`;
+});
+</script>
+</body>
+</html>
