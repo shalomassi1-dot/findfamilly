@@ -77,6 +77,55 @@
     .bethel { color: #4ea8de; }
     .nazareth { color: #fcbf49; }
     .galilee { color: #8d99ae; }
+
+    /* --- RESPONSIVE --- */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  .card {
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  }
+
+  input, button.main {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .result {
+    font-size: 1rem;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 15px;
+  }
+
+  .nav-actions {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .nav-actions button {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -94,23 +143,26 @@
     <h1>Témoins de Jésus </h1>
     <p>Trouve ta famille 🤍 </p>
 
-    <input type="text" id="nameInput" placeholder="Nom de l'élève" />
+    <input type="text" id="nameInput" placeholder="Entrez votre nom" />
     <button class="main" onclick="tirageMaison()">Décider la famille</button>
 
     <div class="result" id="result"></div>
+
+    <!-- BOUTON WHATSAPP DYNAMIQUE -->
+    <div id="whatsappBtnContainer"></div>
   </div>
 </div>
 
 <script>
-  const MAX = 7; // ⬅️ maintenant 7 personnes
-  const PASSWORD = "tmj2025"; // 🔐 mot de passe
+  const MAX = 7; 
+  const PASSWORD = "TMJ2026"; 
 
   let maisons = JSON.parse(localStorage.getItem("famillesTMJ")) || [
-    { nom: "Famille JÉRUSALEM 🕊️", classe: "jerusalem", membres: [] },
-    { nom: "Famille CAPHERNAÜM 📖", classe: "capher", membres: [] },
-    { nom: "Famille JUDA 🙏", classe: "bethel", membres: [] },
-    { nom: "Famille NAZARETH 🤍", classe: "nazareth", membres: [] },
-    { nom: "Famille GALILÉE 👑", classe: "galilee", membres: [] }
+    { nom: "Famille JÉRUSALEM 🔥🤍", classe: "jerusalem", membres: [], whatsapp: "https://chat.whatsapp.com/GRxgcIYHn8tGX46igDsHFF" },
+    { nom: "Famille CAPHARNAÜM 🔥🙏✍️", classe: "capher", membres: [], whatsapp: "https://chat.whatsapp.com/JRZdN3tnXVCHZKfupeay1X" },
+    { nom: "Famille JERICHO 🤍✝️", classe: "bethel", membres: [], whatsapp: "https://chat.whatsapp.com/EzoW6Oc7i3QGBNadDcLLKc" },
+    { nom: "Famille SAMARIE 🔥✝️", classe: "nazareth", membres: [], whatsapp: "https://chat.whatsapp.com/BKjrFoaSdATFGf46bbXStT" },
+    { nom: "Famille BETHLEEM 👑", classe: "galilee", membres: [], whatsapp: "https://chat.whatsapp.com/LlyfNLxzxkcBLpvDCzsPUo" }
   ];
 
   function tirageMaison() {
@@ -120,16 +172,28 @@
     const disponibles = maisons.filter(m => m.membres.length < MAX);
     if (disponibles.length === 0) {
       result.innerHTML = "❌ Toutes les familles sont complètes.";
+      document.getElementById("whatsappBtnContainer").innerHTML = "";
       return;
     }
 
     result.innerHTML = "⏳ Petite réflexion...";
+    document.getElementById("whatsappBtnContainer").innerHTML = "";
 
     setTimeout(() => {
       const famille = disponibles[Math.floor(Math.random() * disponibles.length)];
       famille.membres.push(nom);
 
       result.innerHTML = `🙏 <strong>${nom}</strong>, tu es de la <div class="${famille.classe}">${famille.nom} (${famille.membres.length}/${MAX})</div>`;
+
+      // Création dynamique du bouton WhatsApp
+      const btnContainer = document.getElementById("whatsappBtnContainer");
+      btnContainer.innerHTML = `
+        <a href="${famille.whatsapp}" target="_blank">
+          <button class="main" style="margin-top:10px; background:#25D366; color:#fff;">
+            💬 Rejoindre le groupe WhatsApp de ${famille.nom}
+          </button>
+        </a>
+      `;
 
       sauvegarder();
       nameInput.value = "";
@@ -150,6 +214,7 @@
     maisons.forEach(m => m.membres = []);
     sauvegarder();
     result.innerHTML = "🔄 Tirage réinitialisé.";
+    document.getElementById("whatsappBtnContainer").innerHTML = "";
   }
 
   function accesTableau() {
@@ -163,5 +228,3 @@
 </script>
 </body>
 </html>
-
-
