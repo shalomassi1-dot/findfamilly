@@ -17,9 +17,6 @@ th{background:#222}
 <tbody id="table"></tbody>
 </table>
 <script>
-const PASSWORD = 'TMJ2026';
-const pass = prompt('Mot de passe requis :');
-if(pass !== PASSWORD){ alert('Accès refusé'); history.back(); }
 const maisons = JSON.parse(localStorage.getItem('famillesTMJ')) || [];
 const table = document.getElementById('table');
 maisons.forEach(m => {
